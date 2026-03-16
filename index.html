@@ -4,78 +4,501 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Antigravity | Gesture-controlled Particle System</title>
+    <title>Monami Sadhu | Portfolio</title>
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
-    <!-- MediaPipe dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-    <!-- Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
 <body>
-    <div id="canvas-container"></div>
-    <video class="input_video"
-        style="display: block; position: absolute; top: -1000px; left: -1000px; width: 640px; height: 480px; opacity: 0; z-index: -10;"
-        autoplay playsinline muted></video>
 
-    <button id="toggleControlsBtn" class="toggle-btn">
-        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path
-                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-            </path>
-        </svg>
-    </button>
-
-    <div class="dashboard hidden" id="dashboard">
-        <div class="header">
-            <div class="header-title">
-                <h2>Antigravity</h2>
-                <p class="subtitle">Interactive Core</p>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4" href="#home" data-aos="fade-right">Monami<span
+                    class="text-primary-custom">.</span></a>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+                <i class="fas fa-bars fs-3 text-dark"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto fw-medium gap-3" data-aos="fade-left">
+                    <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About Me</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#education">Education</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
             </div>
-            <button id="closeControlsBtn" class="close-btn">&times;</button>
         </div>
+    </nav>
 
-        <div class="control-group switch-group">
-            <label for="gestureToggle">Enable AI Gestures</label>
-            <label class="switch">
-                <input type="checkbox" id="gestureToggle" checked>
-                <span class="slider round"></span>
-            </label>
+    <!-- Home (Hero Section) -->
+    <section id="home" class="hero min-vh-100 d-flex align-items-center position-relative overflow-hidden">
+        <!-- Floating gradient circles -->
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+
+        <div class="container position-relative z-1 pt-5 mt-5">
+            <div class="row align-items-center flex-column-reverse flex-md-row">
+                <div class="col-md-7 text-center text-md-start mt-5 mt-md-0" data-aos="fade-up"
+                    data-aos-duration="1000">
+                    <h1 class="display-4 fw-bold text-dark mb-3">Hi, I'm <span class="gradient-text">Monami Sadhu</span>
+                    </h1>
+
+                    <div class="h4 fw-normal text-secondary-custom mb-4 hero-subtitle">
+                        <span id="typed-text"></span>
+                    </div>
+
+                    <p class="fs-6 text-muted mb-5 pe-md-5 lh-lg">
+                        Passionate about Cloud Computing and UI/UX Design. I love building clean, functional, and
+                        user-friendly digital experiences.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start mb-5">
+                        <a href="#" class="btn btn-gradient px-4 py-2 rounded-pill shadow-sm"><i
+                                class="fas fa-download me-2"></i>Download Resume</a>
+                        <a href="https://github.com/monami2005" target="_blank"
+                            class="btn btn-outline-custom px-4 py-2 rounded-pill"><i class="fab fa-github me-2"></i>View
+                            GitHub</a>
+                        <a href="#contact" class="btn btn-outline-custom px-4 py-2 rounded-pill"><i
+                                class="fas fa-envelope me-2"></i>Contact Me</a>
+                    </div>
+
+                    <div class="social-links d-flex justify-content-center justify-content-md-start gap-3">
+                        <a href="https://github.com/monami2005" target="_blank" title="GitHub"><i
+                                class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/monami-sadhu-969806345/" target="_blank"
+                            title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.facebook.com/share/17JyGrzSwV/" target="_blank" title="Facebook"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/megha_2976/" target="_blank" title="Instagram"><i
+                                class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- Female Developer Avatar Illustration -->
+                <div class="col-md-5 text-center mb-5 mb-md-0" data-aos="zoom-in" data-aos-duration="1200">
+                    <div class="avatar-container position-relative d-inline-block">
+                        <div class="blob-bg"></div>
+                        <!-- Using DiceBear API for a cute female illustration -->
+                        <img src="https://api.dicebear.com/9.x/lorelei/svg?seed=MonamiSadhu&backgroundColor=transparent&hair=variant02,variant12,variant28&clothing=variant04&eyes=happy"
+                            alt="Female Developer Avatar" class="avatar-img position-relative z-2">
+                        <!-- Tiny decorative laptop icon floating nearby -->
+                        <div
+                            class="laptop-icon-float shadow-sm bg-white rounded-circle d-flex justify-content-center align-items-center">
+                            <i class="fas fa-laptop-code text-primary-custom fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="control-group">
-            <label for="particleColor">Energy Core Color</label>
-            <input type="color" id="particleColor" value="#00d2ff">
+    <!-- About Section -->
+    <section id="about" class="py-5 section-padding bg-white">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title fw-bold">About <span class="gradient-text">Me</span></h2>
+                <div class="title-underline"></div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center" data-aos="fade-up">
+                    <p class="text-muted lh-lg fs-5">
+                        I am a dedicated Computer Science and Engineering student at Parul University. I have a profound
+                        enthusiasm for learning new technologies and an innate curiosity about how the digital world
+                        operates. My primary interests lie in programming, building dynamic web applications, exploring
+                        the vast possibilities of cloud computing, and crafting beautiful, user-centric experiences
+                        through UI/UX design. I believe in bridging the gap between elegant engineering and beautiful
+                        design to create seamless digital products.
+                    </p>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="control-group">
-            <label for="particleCount">Particle Density</label>
-            <input type="range" id="particleCount" min="1000" max="50000" value="15000">
-            <span id="particleCountValue">15000</span>
+    <!-- Education Section -->
+    <section id="education" class="py-5 section-padding section-bg">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title fw-bold">My <span class="gradient-text">Education</span></h2>
+                <div class="title-underline"></div>
+            </div>
+
+            <div class="timeline mt-5">
+                <!-- B.Tech CSE -->
+                <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content card p-4 border-0 rounded-4 shadow-sm hover-card bg-white">
+                        <div class="d-flex justify-content-between align-items-md-start flex-column flex-md-row mb-2">
+                            <h4 class="fw-semibold text-dark mb-0">Bachelor of Technology (B.Tech CSE)</h4>
+                            <span class="badge badge-custom rounded-pill mt-2 mt-md-0 d-inline-flex align-items-center">
+                                <i class="far fa-calendar-alt me-2"></i> 2024 – 2028
+                            </span>
+                        </div>
+                        <h5 class="text-primary-custom fw-medium mb-0">Parul University</h5>
+                    </div>
+                </div>
+
+                <!-- HSC -->
+                <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content card p-4 border-0 rounded-4 shadow-sm hover-card bg-white">
+                        <div class="d-flex justify-content-between align-items-md-start flex-column flex-md-row mb-2">
+                            <h4 class="fw-semibold text-dark mb-0">Higher Secondary Certificate (HSC)</h4>
+                            <span class="badge badge-custom rounded-pill mt-2 mt-md-0 d-inline-flex align-items-center">
+                                <i class="far fa-calendar-alt me-2"></i> 2022 – 2023
+                            </span>
+                        </div>
+                        <h5 class="text-primary-custom fw-medium mb-0">Patkelghata H.R. Degree College</h5>
+                    </div>
+                </div>
+
+                <!-- SSC -->
+                <div class="timeline-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content card p-4 border-0 rounded-4 shadow-sm hover-card bg-white">
+                        <div class="d-flex justify-content-between align-items-md-start flex-column flex-md-row mb-2">
+                            <h4 class="fw-semibold text-dark mb-0">Secondary School Certificate (SSC)</h4>
+                            <span class="badge badge-custom rounded-pill mt-2 mt-md-0 d-inline-flex align-items-center">
+                                <i class="far fa-calendar-alt me-2"></i> 2016 – 2021
+                            </span>
+                        </div>
+                        <h5 class="text-primary-custom fw-medium mb-0">Kumira M.L. High School</h5>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="control-group">
-            <label for="gravityStrength">Repulsion Force</label>
-            <input type="range" id="gravityStrength" min="1" max="100" value="40">
-            <span id="gravityStrengthValue">40</span>
+    <!-- Skills Section -->
+    <section id="skills" class="py-5 section-padding bg-white">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title fw-bold">Professional <span class="gradient-text">Skills</span></h2>
+                <div class="title-underline"></div>
+            </div>
+
+            <div class="row g-4 mt-4">
+
+                <!-- Programming Languages -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card p-4 rounded-4 shadow-sm border h-100 hover-card bg-white">
+                        <h4 class="fs-5 fw-semibold mb-4 d-flex align-items-center text-dark">
+                            <div class="icon-wrap shadow-sm me-3"><i class="fas fa-code"></i></div>
+                            Programming
+                        </h4>
+                        <div class="progress-box mb-3">
+                            <div class="d-flex justify-content-between mb-1"><span class="text-dark fw-medium fs-7">C# &
+                                    C++</span><span class="text-muted fs-7">80%</span></div>
+                            <div class="progress">
+                                <div class="progress-bar custom-progress-bar" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-box mb-3">
+                            <div class="d-flex justify-content-between mb-1"><span
+                                    class="text-dark fw-medium fs-7">Python</span><span
+                                    class="text-muted fs-7">85%</span></div>
+                            <div class="progress">
+                                <div class="progress-bar custom-progress-bar" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-box">
+                            <div class="d-flex justify-content-between mb-1"><span
+                                    class="text-dark fw-medium fs-7">Java</span><span class="text-muted fs-7">75%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar custom-progress-bar" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Web Tech & Frameworks -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card p-4 rounded-4 shadow-sm border h-100 hover-card bg-white">
+                        <h4 class="fs-5 fw-semibold mb-4 d-flex align-items-center text-dark">
+                            <div class="icon-wrap shadow-sm me-3"><i class="fas fa-globe"></i></div>
+                            Web & Frameworks
+                        </h4>
+                        <div class="progress-box mb-3">
+                            <div class="d-flex justify-content-between mb-1"><span class="text-dark fw-medium fs-7">HTML
+                                    & CSS</span><span class="text-muted fs-7">90%</span></div>
+                            <div class="progress">
+                                <div class="progress-bar custom-progress-bar" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-box mb-3">
+                            <div class="d-flex justify-content-between mb-1"><span
+                                    class="text-dark fw-medium fs-7">JavaScript</span><span
+                                    class="text-muted fs-7">80%</span></div>
+                            <div class="progress">
+                                <div class="progress-bar custom-progress-bar" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-box">
+                            <div class="d-flex justify-content-between mb-1"><span
+                                    class="text-dark fw-medium fs-7">Bootstrap & Laravel</span><span
+                                    class="text-muted fs-7">75%</span></div>
+                            <div class="progress">
+                                <div class="progress-bar custom-progress-bar" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cloud & UI/UX -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card p-4 rounded-4 shadow-sm border h-100 hover-card bg-white">
+                        <h4 class="fs-5 fw-semibold mb-4 d-flex align-items-center text-dark">
+                            <div class="icon-wrap shadow-sm me-3"><i class="fas fa-magic"></i></div>
+                            Cloud & UI/UX
+                        </h4>
+                        <div class="progress-box mb-3">
+                            <div class="d-flex justify-content-between mb-1"><span
+                                    class="text-dark fw-medium fs-7">Cloud Fundamentals</span><span
+                                    class="text-muted fs-7">70%</span></div>
+                            <div class="progress">
+                                <div class="progress-bar custom-progress-bar" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-box mb-3">
+                            <div class="d-flex justify-content-between mb-1"><span
+                                    class="text-dark fw-medium fs-7">UI/UX Design</span><span
+                                    class="text-muted fs-7">85%</span></div>
+                            <div class="progress">
+                                <div class="progress-bar custom-progress-bar" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-box">
+                            <div class="d-flex justify-content-between mb-1"><span
+                                    class="text-dark fw-medium fs-7">Wireframing</span><span
+                                    class="text-muted fs-7">80%</span></div>
+                            <div class="progress">
+                                <div class="progress-bar custom-progress-bar" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Badges for Tools, DB, OS -->
+            <div class="row mt-5" data-aos="fade-up">
+                <div class="col-12 text-center">
+                    <h5 class="fw-semibold text-dark mb-4">Development Tools & Ecosystems</h5>
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <span class="badge skill-badge shadow-sm"><i class="fas fa-database me-2"></i>MySQL</span>
+                        <span class="badge skill-badge shadow-sm"><i class="fab fa-git-alt me-2"></i>Git & GitHub</span>
+                        <span class="badge skill-badge shadow-sm"><i class="fas fa-terminal me-2"></i>Visual
+                            Studio</span>
+                        <span class="badge skill-badge shadow-sm"><i class="fas fa-edit me-2"></i>Notepad++ &
+                            PyCharm</span>
+                        <span class="badge skill-badge shadow-sm"><i class="fab fa-windows me-2"></i>Windows</span>
+                        <span class="badge skill-badge shadow-sm"><i class="fab fa-linux me-2"></i>Linux</span>
+                        <span class="badge skill-badge shadow-sm"><i class="fas fa-file-word me-2"></i>MS Word &
+                            Excel</span>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="control-group">
-            <label for="bgColor">Void Background</label>
-            <input type="color" id="bgColor" value="#030308">
+    <!-- Projects Section -->
+    <section id="projects" class="py-5 section-padding section-bg">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title fw-bold">Featured <span class="gradient-text">Projects</span></h2>
+                <div class="title-underline"></div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Project 1 -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card project-card border-0 shadow-sm rounded-4 h-100 bg-white">
+                        <div
+                            class="project-img bg-purple-gradient d-flex justify-content-center align-items-center py-5 rounded-top-4">
+                            <i class="fas fa-stopwatch fa-3x text-white opacity-75"></i>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="fw-bold text-dark mb-3">Reaction Time Tester</h5>
+                            <p class="text-muted fs-7 flex-grow-1">A lightweight and fun interactive game built in the C
+                                programming language to measure human reaction time through terminal-based visual cues.
+                            </p>
+                            <a href="https://github.com/monami2005" target="_blank"
+                                class="btn btn-outline-custom mt-3 w-100 rounded-pill"><i
+                                    class="fab fa-github me-2"></i>View GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card project-card border-0 shadow-sm rounded-4 h-100 bg-white">
+                        <div
+                            class="project-img bg-pink-gradient d-flex justify-content-center align-items-center py-5 rounded-top-4">
+                            <i class="fas fa-calculator fa-3x text-white opacity-75"></i>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="fw-bold text-dark mb-3">Simple Calculator</h5>
+                            <p class="text-muted fs-7 flex-grow-1">A reliable, user-friendly calculator application
+                                developed entirely in Python to perform fundamental mathematical operations seamlessly.
+                            </p>
+                            <a href="https://github.com/monami2005" target="_blank"
+                                class="btn btn-outline-custom mt-3 w-100 rounded-pill"><i
+                                    class="fab fa-github me-2"></i>View GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card project-card border-0 shadow-sm rounded-4 h-100 bg-white">
+                        <div
+                            class="project-img bg-mix-gradient d-flex justify-content-center align-items-center py-5 rounded-top-4">
+                            <i class="fas fa-laptop-code fa-3x text-white opacity-75"></i>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="fw-bold text-dark mb-3">Portfolio Website</h5>
+                            <p class="text-muted fs-7 flex-grow-1">A modern, elegant, and fully responsive personal
+                                developer portfolio website designed with HTML, CSS, JavaScript, and Bootstrap logic.
+                            </p>
+                            <a href="https://github.com/monami2005" target="_blank"
+                                class="btn btn-gradient mt-3 w-100 rounded-pill"><i class="fab fa-github me-2"></i>View
+                                GitHub</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="status" id="statusMsg">Initializing AI Vision...</div>
-        <div class="hint">Move mouse or use hand to repel particles</div>
-    </div>
+    <!-- Contact Section -->
+    <section id="contact" class="py-5 section-padding bg-white">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title fw-bold">Contact <span class="gradient-text">Me</span></h2>
+                <div class="title-underline"></div>
+            </div>
 
+            <div class="row align-items-stretch mt-5">
+                <!-- Address Details -->
+                <div class="col-lg-5 mb-5 mb-lg-0" data-aos="fade-right">
+                    <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm border h-100 custom-card">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="icon-circle shadow-sm me-3"><i class="fas fa-phone-alt"></i></div>
+                            <div>
+                                <h6 class="mb-1 fw-bold text-dark">Phone</h6>
+                                <a href="tel:+917044528716" class="text-muted text-decoration-none hover-link">+91
+                                    7044528716</a>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="icon-circle shadow-sm me-3"><i class="fas fa-envelope"></i></div>
+                            <div>
+                                <h6 class="mb-1 fw-bold text-dark">Email</h6>
+                                <a href="mailto:monamisadhu67@gmail.com"
+                                    class="text-muted text-decoration-none hover-link">monamisadhu67@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="icon-circle shadow-sm me-3"><i class="fas fa-map-marker-alt"></i></div>
+                            <div>
+                                <h6 class="mb-1 fw-bold text-dark">Present Address</h6>
+                                <span class="text-muted fs-7">Vadodara, Gujarat, India</span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle shadow-sm me-3"><i class="fas fa-home"></i></div>
+                            <div>
+                                <h6 class="mb-1 fw-bold text-dark">Permanent Address</h6>
+                                <span class="text-muted fs-7">Patkelghata, Satkhira, Bangladesh</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="col-lg-7" data-aos="fade-left">
+                    <div class="card border-0 shadow-sm rounded-4 bg-white p-4 p-md-5 custom-card h-100">
+                        <form id="contact-form">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control custom-input" placeholder="Your Name"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="email" class="form-control custom-input" placeholder="Your Email"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control custom-input" placeholder="Your Message"
+                                            style="height: 160px" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-4 text-center text-md-start">
+                                    <button type="submit" class="btn btn-gradient px-5 py-3 rounded-pill shadow-sm">
+                                        Send Message <i class="fas fa-paper-plane ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 border-top">
+        <div class="container text-center">
+
+            <div class="social-links-footer d-flex justify-content-center gap-3 mb-3">
+                <a href="https://github.com/monami2005" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/monami-sadhu-969806345/" target="_blank" title="LinkedIn"><i
+                        class="fab fa-linkedin-in"></i></a>
+                <a href="https://www.facebook.com/share/17JyGrzSwV/" target="_blank" title="Facebook"><i
+                        class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/megha_2976/" target="_blank" title="Instagram"><i
+                        class="fab fa-instagram"></i></a>
+            </div>
+
+            <p class="mb-0 text-white-50 fs-7">&copy; 2026 Monami Sadhu | Built with HTML, CSS & JavaScript</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Typed JS -->
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+
+    <!-- Custom Script -->
     <script src="script.js"></script>
 </body>
 
