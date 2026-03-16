@@ -92,27 +92,27 @@ const paletteHex = ['#ff003c', '#00ffff', '#b000ff', '#00ff73', '#ffff00'];
 const colorObj = new THREE.Color();
 const baseColorObj = new THREE.Color();
 
-window.triggerExplosion = function(centerX, centerY, centerZ, intensity = 1.0) {
+window.triggerExplosion = function (centerX, centerY, centerZ, intensity = 1.0) {
     if (currentParticleCount === 0 || hasExploded) return;
     hasExploded = true;
     geometry.setDrawRange(0, currentParticleCount);
-    
+
     // Antigravity style custom vibrant palette
     for (let i = 0; i < currentParticleCount; i++) {
         const i3 = i * 3;
-        
+
         positions[i3] = centerX + (Math.random() - 0.5) * 1.5;
         positions[i3 + 1] = centerY + (Math.random() - 0.5) * 1.5;
         positions[i3 + 2] = centerZ + (Math.random() - 0.5) * 1.5;
-        
+
         const r = 30 + Math.random() * 50;
         const theta = Math.random() * 2 * Math.PI;
         const phi = Math.acos(2 * Math.random() - 1);
-        
+
         basePositions[i3] = r * Math.sin(phi) * Math.cos(theta) * 2.0;
         basePositions[i3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 1.5;
         basePositions[i3 + 2] = r * Math.cos(phi);
-        
+
         const speed = (2 + Math.random() * 6) * intensity;
         velocities[i3] = Math.sin(phi) * Math.cos(theta) * speed;
         velocities[i3 + 1] = Math.sin(phi) * Math.sin(theta) * speed;
@@ -123,12 +123,12 @@ window.triggerExplosion = function(centerX, centerY, centerZ, intensity = 1.0) {
         colors[i3 + 1] = colorObj.g;
         colors[i3 + 2] = colorObj.b;
     }
-    
+
     geometry.attributes.position.needsUpdate = true;
     geometry.attributes.color.needsUpdate = true;
 };
 
-window.changeParticleColors = function() {
+window.changeParticleColors = function () {
     if (!hasExploded) return;
     const colorArray = geometry.attributes.color.array;
     for (let i = 0; i < currentParticleCount; i++) {
@@ -153,7 +153,7 @@ let lastMouseTime = 0;
 
 window.addEventListener('mousemove', (e) => {
     if (gesturesEnabled && handPositions.length > 0) return; // Prefer hands
-    
+
     mouseInfo.active = true;
     const ndcX = (e.clientX / window.innerWidth) * 2 - 1;
     const ndcY = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -162,11 +162,11 @@ window.addEventListener('mousemove', (e) => {
     const dir = vector.sub(camera.position).normalize();
     const distance = -camera.position.z / dir.z;
     const pos = camera.position.clone().add(dir.multiplyScalar(distance));
-    
+
     mouseInfo.x = pos.x;
     mouseInfo.y = pos.y;
     mouseInfo.z = pos.z;
-    
+
     const now = performance.now();
     let velocityMultiplier = 1.0;
     if (lastMousePos) {
@@ -175,14 +175,14 @@ window.addEventListener('mousemove', (e) => {
         velocityMultiplier = Math.min(dist / dt * 50, 4.0);
     }
     currentHandSpeed = velocityMultiplier; // mirror for mouse behavior
-    
+
     lastMousePos = pos.clone();
     lastMouseTime = now;
 
     if (!hasExploded) {
         window.triggerExplosion(pos.x, pos.y, pos.z, Math.max(velocityMultiplier, 1.2));
     }
-    
+
     clearTimeout(mouseInfo.timeout);
     mouseInfo.timeout = setTimeout(() => { mouseInfo.active = false; lastMousePos = null; }, 300);
 });
@@ -192,48 +192,48 @@ let frameCount = 0;
 function animate() {
     requestAnimationFrame(animate);
     frameCount++;
-    
+
     // Draw trail fade
     renderer.render(fadeScene, fadeCamera);
-    
+
     if (!hasExploded) return; // Do not draw particles until triggered
-    
+
     const posAttribute = geometry.attributes.position;
     const posArray = posAttribute.array;
     const colorArray = geometry.attributes.color.array;
     baseColorObj.set(uiParticleColor.value);
-    
+
     // Dampen global hand speed over frames
     currentHandSpeed *= 0.92;
-    
+
     const interactors = [];
     if (gesturesEnabled) handPositions.forEach(hand => interactors.push(hand));
     if (interactors.length === 0 && mouseInfo.active) interactors.push(mouseInfo);
-    
+
     for (let i = 0; i < currentParticleCount; i++) {
         const i3 = i * 3;
-        
+
         let tx = basePositions[i3];
         let ty = basePositions[i3 + 1];
         let tz = basePositions[i3 + 2];
-        
+
         let fx = 0, fy = 0, fz = 0;
 
         interactors.forEach(interactor => {
             const dx = posArray[i3] - interactor.x;
             const dy = posArray[i3 + 1] - interactor.y;
             const dz = posArray[i3 + 2] - interactor.z;
-            
+
             // Repel in a cylinder (ignoring deep Z differences) so the hand sweeps everything
-            const distSq = dx*dx + dy*dy; 
+            const distSq = dx * dx + dy * dy;
             const radiusSq = 1200; // Large influence
-            
-            if (distSq < radiusSq) { 
-                const force = repulsionStrength / (distSq + 2); 
+
+            if (distSq < radiusSq) {
+                const force = repulsionStrength / (distSq + 2);
                 fx += dx * force;
                 fy += dy * force;
                 fz += dz * force * 0.1; // Gentle push in Z to give 3D depth to the shockwave
-                
+
                 // Color explosion on fast hand movement using HSL
                 if (currentHandSpeed > 1.2 && distSq < radiusSq * 0.5 && Math.random() > 0.5) {
                     colorObj.setHSL(Math.random(), 1.0, 0.5);
@@ -243,7 +243,7 @@ function animate() {
                 }
             }
         });
-        
+
         const angle = 0.001;
         const rx = tx * Math.cos(angle) - tz * Math.sin(angle);
         const rz = tx * Math.sin(angle) + tz * Math.cos(angle);
@@ -254,7 +254,7 @@ function animate() {
         const springX = (tx - posArray[i3]) * returnSpeed;
         const springY = (ty - posArray[i3 + 1]) * returnSpeed;
         const springZ = (tz - posArray[i3 + 2]) * returnSpeed;
-        
+
         velocities[i3] = (velocities[i3] + fx + springX) * friction;
         velocities[i3 + 1] = (velocities[i3 + 1] + fy + springY) * friction;
         velocities[i3 + 2] = (velocities[i3 + 2] + fz + springZ) * friction;
@@ -262,20 +262,20 @@ function animate() {
         posArray[i3] += velocities[i3];
         posArray[i3 + 1] += velocities[i3 + 1];
         posArray[i3 + 2] += velocities[i3 + 2];
-        
+
         // Lerp color slowly back to default base color
         colorArray[i3] += (baseColorObj.r - colorArray[i3]) * 0.015;
         colorArray[i3 + 1] += (baseColorObj.g - colorArray[i3 + 1]) * 0.015;
         colorArray[i3 + 2] += (baseColorObj.b - colorArray[i3 + 2]) * 0.015;
     }
-    
+
     posAttribute.needsUpdate = true;
     geometry.attributes.color.needsUpdate = true;
-    
+
     camera.position.x += (Math.sin(frameCount * 0.002) * 8 - camera.position.x) * 0.02;
     camera.position.y += (Math.cos(frameCount * 0.003) * 5 - camera.position.y) * 0.02;
     camera.lookAt(scene.position);
-    
+
     renderer.render(scene, camera);
 }
 animate();
@@ -332,11 +332,11 @@ let lastHandTime = 0;
 
 function onResults(results) {
     if (!gesturesEnabled) return;
-    
+
     handPositions = [];
     if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
         console.log("👐 Hand detected. Number of hands:", results.multiHandLandmarks.length);
-        
+
         statusMsg.textContent = "AI Vision Active - Hand detected";
         statusMsg.style.color = "#00ffcc";
 
@@ -345,18 +345,18 @@ function onResults(results) {
         for (const landmarks of results.multiHandLandmarks) {
             // Extract the index finger landmark position (landmark 8)
             const tip = landmarks[8];
-            
+
             // X is mirrored intentionally for typical front-facing camera usage
-            const ndcX = -(tip.x * 2 - 1); 
+            const ndcX = -(tip.x * 2 - 1);
             const ndcY = -(tip.y * 2 - 1);
-            
+
             // Convert hand coordinates to screen/world space
             const vector = new THREE.Vector3(ndcX, ndcY, 0.5);
             vector.unproject(camera);
             const dir = vector.sub(camera.position).normalize();
             const distance = -camera.position.z / dir.z;
             const pos = camera.position.clone().add(dir.multiplyScalar(distance));
-            
+
             handPositions.push({ x: pos.x, y: pos.y, z: pos.z });
             if (!currentCenter) currentCenter = pos.clone();
 
@@ -370,15 +370,15 @@ function onResults(results) {
             // dt in ms, rough approximation of speed
             const dt = Math.max(now - lastHandTime, 16);
             const dist = lastHandCenter.distanceTo(currentCenter);
-            handVelocityVal = Math.min((dist / dt) * 100, 5.0); 
+            handVelocityVal = Math.min((dist / dt) * 100, 5.0);
             currentHandSpeed = Math.max(currentHandSpeed, handVelocityVal); // Inject to global scope
-            
+
             // Trigger global color explosion on fast swipe
             if (handVelocityVal > 1.8) {
                 window.changeParticleColors();
             }
         }
-        
+
         lastHandCenter = currentCenter;
         lastHandTime = now;
 
@@ -400,28 +400,30 @@ function initMediaPipe() {
     mediaPipeInitialized = true;
     statusMsg.textContent = "Loading Hand Tracking...";
     statusMsg.style.color = "#ff3366";
-    
-    const hands = new Hands({locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-    }});
-    
+
+    const hands = new Hands({
+        locateFile: (file) => {
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        }
+    });
+
     hands.setOptions({
         maxNumHands: 2,
         modelComplexity: 1,
         minDetectionConfidence: 0.6,
         minTrackingConfidence: 0.6
     });
-    
+
     hands.onResults(onResults);
-    
+
     mpCamera = new Camera(videoElement, {
         onFrame: async () => {
-            await hands.send({image: videoElement});
+            await hands.send({ image: videoElement });
         },
         width: 640,
         height: 480
     });
-    
+
     camera_start();
 }
 
